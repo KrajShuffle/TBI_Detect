@@ -14,7 +14,7 @@ Potential Values of LED_WV: 490 or 770 (refers to potential excitation wavelengt
 
 # Creating Unique filename based on the time the image was captured
 cur_time = datetime.datetime.now()
-cur_time_str = cur_time.strftime("%m%d%H%M%S_IR")
+cur_time_str = cur_time.strftime("%m%d%H%M%S")
 
 # Initialize Camera with proper settings
 camera = PiCamera(framerate = Fraction(1,6))
@@ -28,13 +28,18 @@ camera.exposure_mode = 'off'
 # Initializing Specific Excitation LED
 if (sys.argv[1] == 770):
     led_ex = LED(3) # 770 nm LED (LICOR)
+    led_name = "_770"
 else:
     led_ex = LED(18) # 490 nm LED (FAM)
+    led_name = "_490"
+
+# Define String for Final Img Filename
+file_str = cur_time_str + led_name
 
 # Code for Excitation & Image Capture of Fluorophore Emission
 camera.start_preview()
 led_ex.on()
-camera.capture('/home/pi/Pictures/%s.png' % cur_time_str)
+camera.capture('/home/pi/Pictures/%s.png' % file_str)
 camera.stop_preview()
 led_ex.off()
 camera.close()
